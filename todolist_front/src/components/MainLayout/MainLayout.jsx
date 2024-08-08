@@ -5,7 +5,7 @@ import { IoCellularSharp } from "react-icons/io5";
 import { IoIosWifi } from "react-icons/io";
 import { IoIosBatteryFull } from "react-icons/io";
 import MainContainer from '../MainContainer/MainContainer';
-import RegisterModal from '../RegisterModal/RegisterModal';
+
 
 function MainLayout({ children }) {
     const [clock, setClock] = useState("0:00");
@@ -29,7 +29,6 @@ function MainLayout({ children }) {
                     <div css={s.rightItems}><IoCellularSharp /><IoIosWifi /><IoIosBatteryFull /></div>
                 </div>
                 <MainContainer>
-                    <RegisterModal />
                     {children}
                 </MainContainer>
             </div>
