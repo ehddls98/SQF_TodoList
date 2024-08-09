@@ -5,21 +5,22 @@ import { Global } from "@emotion/react";
 import { reset } from "./styles/common";
 import DandP from "./pages/DandP/DandP";
 import MainLayout from "./components/MainLayout/MainLayout";
+import TodoAll from "./pages/TodoAll/TodoAll";
 
 
 function App() {
     return (
-        <> 
-            <Global styles={reset} />   
+        <>
+            <Global styles={reset} />
             <MainLayout>
                 <Routes>
-                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/todo/*" element={<Dashboard />} /> 
                     <Route path="/login" element={<></>} />
                     <Route path="/join" element={<></>} />
-                    {/* <Route path="/dp" element={<DandP />} /> */}
-                    <Route path="/*" element={<NotFound />} /> 
-                </Routes>    
-            </MainLayout>      
+                    <Route path="/dp" element={<DandP />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+            </MainLayout>
         </>
     );
 }

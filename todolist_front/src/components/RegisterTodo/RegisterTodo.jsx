@@ -6,8 +6,10 @@ import { registerModalAtom } from "../../atoms/modalAtoms";
 import ReactSelect from "react-select";
 import axios from "axios";
 import { addTodoApi } from "../../apis/todoApis/addTodoApi";
+import { refreshTdolistAtom } from "../../atoms/todolistAtoms";
 
 function RegisterTodo({closeModal}) {
+
     const importantOptions = [
         { label: "중요함", value: 1, },
         { label: "중요하지않음", value: 2, },
@@ -17,6 +19,8 @@ function RegisterTodo({closeModal}) {
         { label: "급함", value: 1, },
         { label: "급하지않음", value: 2, },
     ];
+
+    const setRefresh = useSetRecoilState(refreshTdolistAtom);
 
    const [todo, setTodo ] = useState({
         title: "",
@@ -71,6 +75,7 @@ function RegisterTodo({closeModal}) {
     const handleSubmitClick = () => {
         console.log(todo);
         addTodoApi(todo);
+        setRefresh(true);
         closeModal();
     }
 
