@@ -8,19 +8,19 @@ import RegisterTodoButton from '../../components/RegisterTodoButton/RegisterTodo
 import MainContainer from '../../components/MainContainer/MainContainer';
 import { Route, Routes } from 'react-router-dom';
 import TodoAll from '../TodoAll/TodoAll';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { refreshTdolistAtom, todolistAtom } from '../../atoms/todolistAtoms';
 import { getTodoAllApi, getTodoCountsApi } from '../../apis/todoApis/getTodoApi';
 
 function Dashboard(props) {
-    const [ todolist, setTodolist ] = useRecoilState(todolistAtom);
+    const setTodolistAll = useSetRecoilState(todolistAtom);
     
     const [ refresh ,setRefresh ] = useRecoilState(refreshTdolistAtom);
 
     const requestTodolist = async () => {
         const todolist = await getTodoAllApi();
         const counts = await getTodoCountsApi();
-        setTodolist({
+        setTodolistAll({
             todolist: todolist?.data, //?(null safe) = null인지 확인하고 null이면 참조하지 않음.
             counts: counts?.data
         });
@@ -48,7 +48,7 @@ function Dashboard(props) {
                 </footer>
             </div>
         <Routes>
-            <Route path="/all" element={<TodoAll todolist={todolist}/>} />
+            <Route path="/all" element={<TodoAll />} />
         </Routes>
         </MainContainer>
     );

@@ -7,6 +7,7 @@ import { BsCalendar4Week, BsCalendarEvent, BsCalendarCheck } from "react-icons/b
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { todolistAtom } from '../../../atoms/todolistAtoms';
+import { MENUS } from '../../../constants/menus';
 
 function Menu({ path, icon, color, title, count }) {
     const navigate = useNavigate();
@@ -34,32 +35,36 @@ function MenuList(props) {
     return (
         <DashboardListItem title={"Menu"}>
             <div css={s.layout}>
-                <Menu 
-                    icon={<BsCalendarEvent />} 
-                    color={"#009e2a"} 
-                    title={"오늘"} 
-                    count={todolist.counts.today} />
                 <Menu
-                    path={"/todo/all"} 
+                    icon={<BsCalendarEvent />} 
+                    path={MENUS.today.path} 
+                    color={MENUS.today.color} 
+                    title={MENUS.today.title} 
+                    counts={todolist.counts.today} />
+                <Menu
                     icon={<BsCalendar4Week />} 
-                    color={"#444444"} 
-                    title={"전체"} 
-                    count={todolist.counts.all} />
+                    path={MENUS.all.path} 
+                    color={MENUS.all.color} 
+                    title={MENUS.all.title} 
+                    counts={todolist.counts.all} />
                 <Menu 
                     icon={<BsCalendar4Week />} 
-                    color={"#ff2f2f"} 
-                    title={"급한일"} 
-                    count={todolist.counts.busy} />
+                    path={MENUS.busy.path} 
+                    color={MENUS.busy.color} 
+                    title={MENUS.busy.title} 
+                    counts={todolist.counts.busy} />
                 <Menu 
                     icon={<BsCalendar4Week />} 
-                    color={"#64289c"} 
-                    title={"중요한일"} 
-                    count={todolist.counts.important} />
+                    path={MENUS.important.path} 
+                    color={MENUS.important.color} 
+                    title={MENUS.important.title} 
+                    counts={todolist.counts.important} />
                 <Menu 
                     icon={<BsCalendarCheck />} 
-                    color={"#009de6"} 
-                    title={"완료"} 
-                    count={todolist.counts.complete} />
+                    path={MENUS.complete.path} 
+                    color={MENUS.complete.color} 
+                    title={MENUS.complete.title} 
+                    counts={todolist.counts.complete} />
                 
             </div>
         </DashboardListItem>

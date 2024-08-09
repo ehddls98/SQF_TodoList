@@ -19,7 +19,7 @@ function MainLayout({ children }) {
     }, []);
 
     return (
-        <div css={s.layout}>
+        <div css={s.layout} >
             <div css={s.frame}>
                 <div css={s.topBar}>
                     <div css={s.clock}>{clock}</div>
