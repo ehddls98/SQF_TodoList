@@ -31,7 +31,6 @@ function Menu({ path, icon, color, title, count }) {
 
 function MenuList(props) {
     const [ todolist ] = useRecoilState(todolistAtom);
-
     return (
         <DashboardListItem title={"Menu"}>
             <div css={s.layout}>
@@ -40,31 +39,31 @@ function MenuList(props) {
                     path={MENUS.today.path} 
                     color={MENUS.today.color} 
                     title={MENUS.today.title} 
-                    counts={todolist.counts.today} />
+                    count={todolist.counts.today} />
                 <Menu
                     icon={<BsCalendar4Week />} 
                     path={MENUS.all.path} 
                     color={MENUS.all.color} 
                     title={MENUS.all.title} 
-                    counts={todolist.counts.all} />
-                <Menu 
-                    icon={<BsCalendar4Week />} 
-                    path={MENUS.busy.path} 
-                    color={MENUS.busy.color} 
-                    title={MENUS.busy.title} 
-                    counts={todolist.counts.busy} />
+                    count={todolist.counts.all} />
                 <Menu 
                     icon={<BsCalendar4Week />} 
                     path={MENUS.important.path} 
                     color={MENUS.important.color} 
                     title={MENUS.important.title} 
-                    counts={todolist.counts.important} />
+                    count={todolist.counts.important} />
+                <Menu 
+                    icon={<BsCalendar4Week />} 
+                    path={MENUS.busy.path} 
+                    color={MENUS.busy.color} 
+                    title={MENUS.busy.title} 
+                    count={todolist.counts.busy} />
                 <Menu 
                     icon={<BsCalendarCheck />} 
                     path={MENUS.complete.path} 
                     color={MENUS.complete.color} 
                     title={MENUS.complete.title} 
-                    counts={todolist.counts.complete} />
+                    count={todolist.counts.complete} />
                 
             </div>
         </DashboardListItem>

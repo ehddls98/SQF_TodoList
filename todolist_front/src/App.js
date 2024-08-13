@@ -5,7 +5,7 @@ import { Global } from "@emotion/react";
 import { reset } from "./styles/common";
 import DandP from "./pages/DandP/DandP";
 import MainLayout from "./components/MainLayout/MainLayout";
-import TodoAll from "./pages/TodoAll/TodoAll";
+import Note from "./pages/Note/Note";
 
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
                     <Route path="/join" element={<></>} />
                     <Route path="/dp" element={<DandP />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/note" element={<Note />} />
                 </Routes>
             </MainLayout>
         </>

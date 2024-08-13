@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import RegisterModal from '../RegisterModal/RegisterModal';
+import Note from '../../pages/Note/Note';
 
 function MainContainer({ children }) {
 const [ modalElement, setModalElement ] = useState(<></>);
