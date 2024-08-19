@@ -14,7 +14,8 @@ export const todolistAtom = atom({
     },
 })
 
-export const refreshTdolistAtom = atom({
+export const refreshTodolistAtom = atom({
     key: "refreshTodolistState",
     default: true,
 }) 
+

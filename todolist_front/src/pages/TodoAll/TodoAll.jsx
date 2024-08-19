@@ -1,102 +1,93 @@
+/** @jsxImportSource @emotion/react */
+import * as s from "./style";
 import React, { useEffect, useState } from 'react';
 import PageAnimationLayout from '../../components/PageAnimationLayout/PageAnimationLayout';
 import MainContainer from '../../components/MainContainer/MainContainer';
 import BackButtonTop from '../../components/BackButtonTop/BackButtonTop';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import { MENUS } from '../../constants/menus';
-import { useRecoilState } from 'recoil';
-import { todolistAtom } from '../../atoms/todolistAtoms';
-import YearGroup from '../../components/YearGroup/YearGroup';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { refreshTodolistAtom, todolistAtom } from '../../atoms/todolistAtoms';
+import TodoCalendar from '../../components/TodoCalendar/TodoCalendar';
+import RegisterTodoButton from '../../components/RegisterTodoButton/RegisterTodoButton';
+import { modifyTodoAtom, selectedCalendarTodoAtom } from "../../atoms/calendarAtom";
+import ConfirmButtonTop from "../../components/ConfirmButtonTop/ConfirmButtonTop";
+import { modifyTodoApi } from "../../apis/todoApis/modifyTodoApi";
 
 function TodoAll(props) {
-    const [ isShow, setShow ] = useState(true);
-    const [ todolistAll ] = useRecoilState(todolistAtom);
-    const [ calendar, setCalendar ] = useState([]);
-    
-    useEffect(()=> {
-        
-        //객체를 배열로 만들어야 순서대로 출력할 수 있다.
-        const obj = {
-            "test1": 10,
-            "test2": 20,
-            "test3": 30,
-            "test4": 40,
-        }
+    const [todolistAll] = useRecoilState(todolistAtom);
+    const [selectedTodo, setSelectedTodo] = useRecoilState(selectedCalendarTodoAtom);
+    const [modifyTodo] = useRecoilState(modifyTodoAtom);
+    const setRefresh = useSetRecoilState(refreshTodolistAtom);
 
-        //obj 객체를 Object.entries를 통해 objList로 변환
-        const objList = Object.entries(obj);
-        console.log(Object.entries(obj))
-        
-        //objList 안에 들어있는 하나의 엔트리는 [key: value]로 구성되어 있다. 
-        for(let o of objList) {
-            const key = o[0]; // test1, test2, test3, test4
-            const value = o[1]; //10, 20, 30, 40
-            
-            console.log("key: " + key);
-            console.log("value: " + value);
-        }
+    const [calendarData, setCalendarData] = useState({});
+    const [isShow, setShow] = useState(true);
+    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
-        //객체 안에 객체가 있는 형태
-        //obj2 안에 있는 a, b 객체도 entry로 변환하여 순서대로 출력할 수 있다.
-        const obj2 = {
-            "a": {
-                "test1": 10,
-                "test2": 20,
-                "test3": 30,
-                "test4": 40,
-            },
-            "b": {
-                "test5": 50,
-                "test6": 60,
-                "test7": 70,
-                "test8": 80,
-            },
-            
-        }
-        // const objList = Object.entries(obj2);
-        // for(let o of objList) {
-        //     const key = o[0];
-        //     const value = Object.entries(o[1]);
-            
-        //     console.log("key: " + key);
-        //     console.log("value: " + value);
+    useEffect(() => {
+        let preTodo = {
+            ...(todolistAll.todolist.filter(todo =>
+                todo.todoId === modifyTodo?.todoId)[0]) //modifyTodo는 최초에 빈 객체이기 때문에 null safe를 걸어줬다.
+        };
 
-        //     for(let e of value) {
-        //         const key2 = e[0];
-        //         const value2 = e[1];
-        //         console.log("key2:" + key2)
-        //         console.log("value2:" + value2)
-        //     }
-        // }
-    }, []);
+        preTodo = {
+            ...preTodo,
+            todoDateTime: preTodo?.todoDateTime?.replaceAll(" ", "T")
+        };
 
-        useEffect(() => {
-        let calendarData = {}; //calendarData 빈 객체를 선언한다. 
-        for (let todo of todolistAll.todolist) { //todolistAll에서 
-            const year = todo.todoDateTime.slice(0, 4);
-            const month = todo.todoDateTime.slice(5, 7);
+        const disabled = JSON.stringify(modifyTodo) === JSON.stringify(preTodo) || !modifyTodo?.title?.trim(); //객체가 같은지 비교할때는 JSON 문자열로 변환하여 비교해야 한다. modifyTodo === preTodo는 주소값 비교
+        setSubmitButtonDisabled(disabled);
+    }, [modifyTodo])
 
-            if (!calendarData[year]) {
-                calendarData[year] = {};
-            }
-            if (!calendarData[year][month]) {
-                calendarData[year][month] = [];
+    useEffect(() => {
+        const tempCalendarData = {};
+
+        for (let todo of todolistAll.todolist) {
+            const dateTime = todo.todoDateTime;
+            const year = dateTime.slice(0, 4);
+            const month = dateTime.slice(5, 7);
+            const date = dateTime.slice(0, 10);
+
+            if (!tempCalendarData[year]) {
+                tempCalendarData[year] = {};
             }
 
-            calendarData[year][month].push(todo);
-        }
-                
-        setCalendar(<YearGroup calendarData={calendarData} />);
+            if (!tempCalendarData[year][month]) {
+                tempCalendarData[year][month] = {};
+            }
+            if (!tempCalendarData[year][month][date]) {
+                tempCalendarData[year][month][date] = [];
+            }
 
+            tempCalendarData[year][month][date].push(todo);
+        }
+
+        setCalendarData(tempCalendarData);
     }, [todolistAll]);
+    
+    const modifyCancel = () => {
+        setSelectedTodo(0);
+    }
+
+    const modifySubmit = async () => {
+        await modifyTodoApi(modifyTodo);
+        setRefresh(true);
+        setSelectedTodo(0);
+    }
 
     return (
         <PageAnimationLayout isShow={isShow} setShow={setShow}>
             <MainContainer>
-               <BackButtonTop setShow={setShow} />
-               <PageTitle title={MENUS.all.title} color={MENUS.all.color} />
-               {calendar}
-
+                <div css={s.layout}>
+                    {
+                        selectedTodo === 0
+                            ? <BackButtonTop setShow={setShow} />
+                            : <ConfirmButtonTop onCancel={modifyCancel} onSubmit={modifySubmit} disabled={submitButtonDisabled} />
+                    }
+                    <PageTitle title={MENUS.all.title} color={MENUS.all.color} />
+                    <TodoCalendar calendarData={calendarData} />
+                    <RegisterTodoButton />
+                </div>
             </MainContainer>
         </PageAnimationLayout>
     );

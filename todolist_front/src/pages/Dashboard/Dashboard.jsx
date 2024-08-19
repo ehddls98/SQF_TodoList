@@ -9,14 +9,13 @@ import MainContainer from '../../components/MainContainer/MainContainer';
 import { Route, Routes } from 'react-router-dom';
 import TodoAll from '../TodoAll/TodoAll';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { refreshTdolistAtom, todolistAtom } from '../../atoms/todolistAtoms';
+import { refreshTodolistAtom, todolistAtom } from '../../atoms/todolistAtoms';
 import { getTodoAllApi, getTodoCountsApi } from '../../apis/todoApis/getTodoApi';
-import Note from '../Note/Note';
 
 function Dashboard(props) {
     const setTodolistAll = useSetRecoilState(todolistAtom);
     
-    const [ refresh ,setRefresh ] = useRecoilState(refreshTdolistAtom);
+    const [ refresh , setRefresh ] = useRecoilState(refreshTodolistAtom);
 
     const requestTodolist = async () => {
         const todolist = await getTodoAllApi();
